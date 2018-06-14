@@ -8,11 +8,9 @@ const CANVAS_HEIGHT = 600;
 const BACKGROUND_COLOR = "black";
 
 var gameOver = false;
-var carName = "Blue Car";
-var car2Name = "Green Car";
+var playerName = "Warrior";
 
-var p1 = new carClass();
-var p2 = new carClass();
+var warrior = new warriorClass();
 
 window.onload = function () {
     canvas = document.getElementById("game");
@@ -23,8 +21,7 @@ window.onload = function () {
     draw.textAlign = "center";
 
     initInput();
-    p2.initCar(car2Pic, car2Name);
-    p1.initCar(carPic, carName);
+    warrior.init(playerPic, playerName);
 }
 
 function startGameAfterLoading() {
@@ -39,16 +36,14 @@ function moveEverything() {
         return;
     }
 
-    p1.driveCar();
-    p2.driveCar();
+    warrior.move();
 }
 
 function drawEverything() {
     if (gameOver) {
-        // todo: halt game and add function
+        // todo halt game and add function
     } else {
         drawTracks();
-        p1.drawCar();
-        p2.drawCar();
+        warrior.draw();
     }
 }

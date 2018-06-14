@@ -4,35 +4,30 @@ const REVERSE_POWER = 0.02;
 const TURN_RATE = 0.01;
 const MIN_TURN_SPEED = 0.05;
 
-var steerLeft = false;
-var accelerate = false;
-var steerRight = false;
-var reverse = false;
-
-function carClass() {
+function warriorClass() {
     this.x = 0;
     this.y = 0;
 
-    this.steerLeft = false;
-    this.accelerate = false;
-    this.steerRight = false;
-    this.reverse = false;
+    this.moveWarriorWest = false;
+    this.moveWarriorNorth = false;
+    this.moveWarriorEast = false;
+    this.moveWarriorSouth = false;
 
-    this.setupControls = function (upKey, downKey, leftKey, rightKey) {
-        this.accelerateKey = upKey;
-        this.reverseKey = downKey;
-        this.steerLeftKey = leftKey;
-        this.steerRightKey = rightKey;
+    this.setupControls = function (north, east, south, west) {
+        this.northKey = north;
+        this.southKey = south;
+        this.westKey = west;
+        this.eastKey = east;
     }
 
-    this.driveCar = function () {
+    this.move = function () {
         if (Math.abs(this.speed) > MIN_TURN_SPEED) {
-            if (this.steerLeft) this.turnCarLeft();
-            if (this.steerRight) this.turnCarRight();
+            if (this.moveWest) this.moveWarriorWest();
+            if (this.moveEast) this.moveWarriorEast();
         }
 
-        if (this.accelerate) this.accelerateCar();
-        if (this.reverse) this.reverseCar();
+        if (this.moveNorth) this.moveWarriorNorth();
+        if (this.moveSouth) this.moveWarriorSouth();
 
         var nextX = this.x + Math.cos(this.angle) * this.speed;
         var nextY = this.y + Math.sin(this.angle) * this.speed;
@@ -44,11 +39,9 @@ function carClass() {
                 this.y = nextY;
                 break;
             case TRACK_GOAL:
-                // todo
                 document.getElementById("debugText").innerHTML =
                     this.myName + " hit the goal line";
-                p1.carReset();
-                p2.carReset();
+                this.reset();
                 break;
             case TRACK_WALL:
             default:
@@ -57,13 +50,13 @@ function carClass() {
 
         this.speed *= ROUNDSPEED_DECAY_MULT;
     }
-    this.initCar = function (whichGraphic, whichName) {
+    this.init = function (whichGraphic, whichName) {
         this.myBitmap = whichGraphic;
         this.myName = whichName;
-        this.carReset();
+        this.reset();
     }
 
-    this.carReset = function () {
+    this.reset = function () {
         this.speed = 0;
         this.angle = -0.5 * Math.PI;
 
@@ -84,24 +77,24 @@ function carClass() {
         this.y = this.homeY;
     }
 
-    this.drawCar = function () {
+    this.draw = function () {
         drawImageCenteredAtCoordWithRotation(this.myBitmap,
             this.x, this.y, this.angle);
     }
 
-    this.turnCarLeft = function () {
+    this.moveWarriorWest = function () {
         this.angle -= TURN_RATE * Math.PI;
     }
 
-    this.accelerateCar = function () {
+    this.moveWarriorNorth = function () {
         this.speed += DRIVE_POWER;
     }
 
-    this.turnCarRight = function () {
+    this.moveWarriorEast = function () {
         this.angle += TURN_RATE * Math.PI;
     }
 
-    this.reverseCar = function () {
+    this.moveWarriorSouth = function () {
         this.speed -= REVERSE_POWER;
     }
 

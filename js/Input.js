@@ -11,40 +11,34 @@ const D_KEY = 68;
 function initInput() {
     document.addEventListener("keydown", keyPressed);
     document.addEventListener("keyup", keyReleased);
-    p1.setupControls(UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW);
-    p2.setupControls(W_KEY, S_KEY, A_KEY, D_KEY);
+    warrior.setupControls(W_KEY, D_KEY, S_KEY, A_KEY);
 }
 
 function keyPressed(e) {
     // document.getElementById("debugText").innerHTML = "KeyCode pushed: " + e.keyCode;
-    setKeyHoldState(e.keyCode, p1, true);
-    setKeyHoldState(e.keyCode, p2, true);
-
-    // prevents the key's default function (e.g. scroll the page)
+    setKeyHoldState(e.keyCode, warrior, true);
     e.preventDefault();
 }
 
 function keyReleased(e) {
     // document.getElementById("debugText").innerHTML = "KeyCode released: " + e.keyCode;
-    setKeyHoldState(e.keyCode, p1, false);
-    setKeyHoldState(e.keyCode, p2, false);
-
+    setKeyHoldState(e.keyCode, warrior, false);
     e.preventDefault();
 }
 
-function setKeyHoldState(key, car, setTo) {
-    switch (key) {
-        case car.steerLeftKey:
-            car.steerLeft = setTo;
+function setKeyHoldState(keyCode, warrior, setTo) {
+    switch (keyCode) {
+        case warrior.northKey:
+            warrior.moveNorth = setTo;
             break;
-        case car.accelerateKey:
-            car.accelerate = setTo;
+        case warrior.eastKey:
+            warrior.moveEast = setTo;
             break;
-        case car.steerRightKey:
-            car.steerRight = setTo;
+        case warrior.southKey:
+            warrior.moveSouth = setTo;
             break;
-        case car.reverseKey:
-            car.reverse = setTo;
+        case warrior.westKey:
+            warrior.moveWest = setTo;
             break;
         default:
             return;
