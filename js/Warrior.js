@@ -1,55 +1,76 @@
-const ROUNDSPEED_DECAY_MULT = 0.97;
-const DRIVE_POWER = 0.05;
-const REVERSE_POWER = 0.02;
-const TURN_RATE = 0.01;
-const MIN_TURN_SPEED = 0.05;
+const PLAYER_MOVE_SPEED = 1.0;
 
 function warriorClass() {
     this.x = 0;
     this.y = 0;
 
-    this.moveWarriorWest = false;
-    this.moveWarriorNorth = false;
-    this.moveWarriorEast = false;
-    this.moveWarriorSouth = false;
+    this.moveNorth = false;
+    this.moveEast = false;
+    this.moveSouth = false;
+    this.moveWest = false;
 
     this.setupControls = function (north, east, south, west) {
         this.northKey = north;
+        this.eastKey = east;
         this.southKey = south;
         this.westKey = west;
-        this.eastKey = east;
     }
 
     this.move = function () {
-        if (Math.abs(this.speed) > MIN_TURN_SPEED) {
-            if (this.moveWest) this.moveWarriorWest();
-            if (this.moveEast) this.moveWarriorEast();
+        var nextX = this.x;
+        var nextY = this.y;
+
+        if (this.moveNorth) {
+            nextY -= PLAYER_MOVE_SPEED;
+        }
+        
+        if (this.moveEast) {
+            nextX += PLAYER_MOVE_SPEED;
         }
 
-        if (this.moveNorth) this.moveWarriorNorth();
-        if (this.moveSouth) this.moveWarriorSouth();
+        if (this.moveSouth) {
+            nextY += PLAYER_MOVE_SPEED;
+        }
 
-        var nextX = this.x + Math.cos(this.angle) * this.speed;
-        var nextY = this.y + Math.sin(this.angle) * this.speed;
-        var drivingIntoTileType = getTrackAtPixelCoord(nextX, nextY);
+        if (this.moveWest) {
+            nextX -= PLAYER_MOVE_SPEED;
+        }
 
-        switch (drivingIntoTileType) {
-            case TRACK_ROAD:
+        var walkIntoTileIndex = getTileIndexAtPixelCoord(nextX, nextY);
+        var walkIntoTileType = TILE_WALL;   // assume warrior is walking into a wall
+
+        if (walkIntoTileIndex != undefined) {
+            walkIntoTileType = roomGrid[walkIntoTileIndex]; // corrects assumption if needed
+        }
+
+        switch (walkIntoTileType) {
+            case TILE_GROUND:
                 this.x = nextX;
                 this.y = nextY;
                 break;
-            case TRACK_GOAL:
-                document.getElementById("debugText").innerHTML =
-                    this.myName + " hit the goal line";
+            case TILE_GOAL:
+                document.getElementById("debugText").innerHTML = this.myName + " won";
                 this.reset();
                 break;
-            case TRACK_WALL:
+            case TILE_KEY:
+                this.keysHeld++;
+                document.getElementById("debugText").innerHTML = "Keys: " + this.keysHeld;
+                roomGrid[walkIntoTileIndex] = TILE_GROUND;
+                break;
+            case TILE_DOOR:
+                if (this.keysHeld > 0) {
+                    this.keysHeld--;
+                    document.getElementById("debugText").innerHTML = "Keys: " + this.keysHeld;
+                    roomGrid[walkIntoTileIndex] = TILE_GROUND;
+                }
+                break;
+            case TILE_WALL:
             default:
                 this.speed = 0;
+                break;
         }
-
-        this.speed *= ROUNDSPEED_DECAY_MULT;
     }
+
     this.init = function (whichGraphic, whichName) {
         this.myBitmap = whichGraphic;
         this.myName = whichName;
@@ -58,16 +79,16 @@ function warriorClass() {
 
     this.reset = function () {
         this.speed = 0;
-        this.angle = -0.5 * Math.PI;
+        this.keysHeld = 0;
 
         if (this.homeX == undefined) {
-            for (var i = 0; i < trackGrid.length; i++) {
-                if (trackGrid[i] == TRACK_PLAYER) {
-                    var tileRow = Math.floor(i / TRACK_COLUMNS);
-                    var tileCol = i % TRACK_COLUMNS;
-                    this.homeX = tileCol * TRACK_WIDTH + 0.5 * TRACK_WIDTH;
-                    this.homeY = tileRow * TRACK_HEIGHT + 0.5 * TRACK_HEIGHT;
-                    trackGrid[i] = TRACK_ROAD;
+            for (var i = 0; i < roomGrid.length; i++) {
+                if (roomGrid[i] == TILE_PLAYER) {
+                    var tileRow = Math.floor(i / ROOM_COLUMNS);
+                    var tileCol = i % ROOM_COLUMNS;
+                    this.homeX = tileCol * TILE_WIDTH + 0.5 * TILE_WIDTH;
+                    this.homeY = tileRow * TILE_HEIGHT + 0.5 * TILE_HEIGHT;
+                    roomGrid[i] = TILE_GROUND;
                     break;
                 }
             }
@@ -79,23 +100,7 @@ function warriorClass() {
 
     this.draw = function () {
         drawImageCenteredAtCoordWithRotation(this.myBitmap,
-            this.x, this.y, this.angle);
-    }
-
-    this.moveWarriorWest = function () {
-        this.angle -= TURN_RATE * Math.PI;
-    }
-
-    this.moveWarriorNorth = function () {
-        this.speed += DRIVE_POWER;
-    }
-
-    this.moveWarriorEast = function () {
-        this.angle += TURN_RATE * Math.PI;
-    }
-
-    this.moveWarriorSouth = function () {
-        this.speed -= REVERSE_POWER;
+            this.x, this.y, 0.0);
     }
 
 } // end of class definition

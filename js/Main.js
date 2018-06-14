@@ -1,5 +1,5 @@
 var canvas;
-var draw;
+var canvasContext;
 
 const FPS = 30;
 
@@ -14,14 +14,14 @@ var warrior = new warriorClass();
 
 window.onload = function () {
     canvas = document.getElementById("game");
-    draw = canvas.getContext("2d");
+    canvasContext = canvas.getContext("2d");
 
     loadImages();
 
-    draw.textAlign = "center";
+    canvasContext.textAlign = "center";
 
     initInput();
-    warrior.init(playerPic, playerName);
+    warrior.init(warriorPic, playerName);
 }
 
 function startGameAfterLoading() {
@@ -43,7 +43,7 @@ function drawEverything() {
     if (gameOver) {
         // todo halt game and add function
     } else {
-        drawTracks();
+        drawRoom();
         warrior.draw();
     }
 }

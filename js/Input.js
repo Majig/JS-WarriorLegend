@@ -26,22 +26,18 @@ function keyReleased(e) {
     e.preventDefault();
 }
 
-function setKeyHoldState(keyCode, warrior, setTo) {
-    switch (keyCode) {
-        case warrior.northKey:
-            warrior.moveNorth = setTo;
-            break;
-        case warrior.eastKey:
-            warrior.moveEast = setTo;
-            break;
-        case warrior.southKey:
-            warrior.moveSouth = setTo;
-            break;
-        case warrior.westKey:
-            warrior.moveWest = setTo;
-            break;
-        default:
-            return;
+function setKeyHoldState(thisKey, thisPlayer, setTo) {
+    if (thisKey == thisPlayer.northKey) {
+        thisPlayer.moveNorth = setTo;
+    }
+    if (thisKey == thisPlayer.eastKey) {
+        thisPlayer.moveEast = setTo;
+    }
+    if (thisKey == thisPlayer.southKey) {
+        thisPlayer.moveSouth = setTo;
+    }
+    if (thisKey == thisPlayer.westKey) {
+        thisPlayer.moveWest = setTo;
     }
 }
 

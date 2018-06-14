@@ -1,23 +1,23 @@
-var trackPics = [];
+var tilePics = [];
 
-var playerPic = document.createElement("img");
+var warriorPic = document.createElement("img");
 
-var trackPickWall = document.createElement("img");
-var trackPickRoad = document.createElement("img");
-var trackPickGoal = document.createElement("img");
-var trackPickTree = document.createElement("img");
-var trackPickFlag = document.createElement("img");
+var worldPicWall = document.createElement("img");
+var worldPicGround = document.createElement("img");
+var worldPicGoal = document.createElement("img");
+var worldPicKey = document.createElement("img");
+var worldPicDoor = document.createElement("img");
 
 var picsToLoad = 0;
 
 function loadImages () {
-    beginLoadingImage(playerPic, "player1.png");
+    beginLoadingImage(warriorPic, "warrior.png");
 
-    loadImageForTrackCode(TRACK_ROAD, "track_road.png");
-    loadImageForTrackCode(TRACK_WALL, "track_wall.png");
-    loadImageForTrackCode(TRACK_GOAL, "track_goal.png");
-    loadImageForTrackCode(TRACK_TREE, "track_treeWall.png");
-    loadImageForTrackCode(TRACK_FLAG, "track_flagWall.png");
+    loadImageForRoomCode(TILE_GROUND, "world_ground.png");
+    loadImageForRoomCode(TILE_WALL, "world_wall.png");
+    loadImageForRoomCode(TILE_GOAL, "world_goal.png");
+    loadImageForRoomCode(TILE_KEY, "world_key.png");
+    loadImageForRoomCode(TILE_DOOR, "world_door.png");
 }
 
 function beginLoadingImage(imgVar, fileName) {
@@ -34,7 +34,7 @@ function countLoadedImageAndLaunchIfReady() {
     }
 }
 
-function loadImageForTrackCode(trackCode, fileName) {
-    trackPics[trackCode] = document.createElement("img");
-    beginLoadingImage(trackPics[trackCode], fileName);
+function loadImageForRoomCode(roomCode, fileName) {
+    tilePics[roomCode] = document.createElement("img");
+    beginLoadingImage(tilePics[roomCode], fileName);
 }
